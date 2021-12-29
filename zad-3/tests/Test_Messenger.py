@@ -21,9 +21,9 @@ class Test_Messenger(unittest.TestCase):
 	def test_sendText_if_uses_mailServer(self):
 		messenger = Messenger(templateEngine=self.templateEngine, mailServer=self.mailServer)
 		with patch.object(self.templateEngine, "applyTemplate", side_effect=lambda text: {"text": text}):
-			with patch.object(self.mailServer, "receiveMessage", side_effect=lambda sender, recipient, message: recipient.receiveMessage(sender, message)):
+			with patch.object(self.mailServer, "receiveMessage", side_effect=lambda sender, recipient, message: recipient.receiveMessage(sender, message)) as mock_mailServer_receiveMessage:
 				messenger.sendText(messenger, "Hello world!")
-				self.mailServer.receiveMessage.assert_called_once_with(messenger, messenger, {"text": "Hello world!"})
+				mock_mailServer_receiveMessage.assert_called_once_with(messenger, messenger, {"text": "Hello world!"})
 
 	def test_sendText_if_raises_TypeError_if_recipient_is_not_Messenger(self):
 		messenger = Messenger(templateEngine=self.templateEngine, mailServer=self.mailServer)
@@ -34,3 +34,12 @@ class Test_Messenger(unittest.TestCase):
 		messenger = Messenger(templateEngine=self.templateEngine, mailServer=self.mailServer)
 		with self.assertRaises(TypeError):
 			messenger.sendText(messenger, object())
+
+	def test_sendText_if_applies_template(self):
+		messenger = Messenger(templateEngine=self.templateEngine, mailServer=self.mailServer)
+		with patch.object(self.templateEngine, "applyTemplate") as mock_applyTemplate:
+			try:
+				messenger.sendText(messenger, "Hello world!")
+			except:
+				pass
+			mock_applyTemplate.assert_called_once_with("Hello world!")
