@@ -50,7 +50,7 @@ class Test_randomuser(unittest.TestCase):
 			self.assertIsInstance(user["location"]["coordinates"], dict)
 
 	@patch("requests.get", return_value=Wrapper({"results": [{"name": {"first": "Maciej"}}]}))
-	def test_if_coordinates_is_dict(self, mockRequestsGet):
+	def test_if_firstName_is_str(self, mockRequestsGet):
 		responseData = requests.get("https://randomuser.me/api/").json()
 		for user in responseData["results"]:
 			self.assertIsInstance(user["name"]["first"], str)
