@@ -28,3 +28,7 @@ class Test_randomuser(unittest.TestCase):
 	def test_if_coordinates_is_dict(self):
 		for user in self.responseData["results"]:
 			self.assertIsInstance(user["location"]["coordinates"], dict)
+
+	def test_if_firstName_is_str(self):
+		for user in self.responseData["results"]:
+			self.assertIsInstance(user["name"]["first"], str)
